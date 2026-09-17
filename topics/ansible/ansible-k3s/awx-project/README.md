@@ -22,14 +22,14 @@ Thu muc nay chua playbook + inventory de AWX keo ve tu Git va chay.
 
 3. **Inventory**
    - Tao Inventory moi, them Source loai *Sourced from a Project*,
-     tro toi Project o buoc 1 va file `ansible-k3s/awx-project/inventory.ini`.
+     tro toi Project o buoc 1 va file `topics/ansible/ansible-k3s/awx-project/inventory.ini`.
    - Hoac tao host thu cong: `target-node` voi variable
      `ansible_host=target-node.ansible.svc.cluster.local`.
 
 4. **Job Template**
    - Inventory: chon inventory o buoc 3
    - Project: chon project o buoc 1
-   - Playbook: `ansible-k3s/awx-project/scenario1_packages.yml`
+   - Playbook: `topics/ansible/ansible-k3s/awx-project/scenario1_packages.yml`
    - Credential: chon credential o buoc 2
    - Luu va bam **Launch**.
 

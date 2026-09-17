@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Cài AWX Operator từ GitHub, ghim phiên bản 2.19.1
+  - github.com/ansible/awx-operator/config/default?ref=2.19.1
+
+# Namespace nơi operator và AWX chạy
+namespace: awx
+
+images:
+  - name: quay.io/ansible/awx-operator
+    newTag: 2.19.1
+  # gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0 da bi go khoi gcr.io.
+  # Tro sang mirror tren Quay (brancz) van con ton tai.
+  - name: gcr.io/kubebuilder/kube-rbac-proxy
+    newName: quay.io/brancz/kube-rbac-proxy
+    newTag: v0.15.0
