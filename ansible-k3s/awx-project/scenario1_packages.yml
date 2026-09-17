@@ -1,0 +1,37 @@
+---
+# Scenario 1: Cai dat & cau hinh package
+# Nguon: topics/ansible/ansible_scenarios_thuc_te.md (muc 1)
+# Chay qua AWX: Inventory + Credential khai bao trong AWX, khong nhung secret vao Git.
+- name: Cai cac package can thiet cho web server
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Cai nginx, git, curl
+      ansible.builtin.package:
+        name:
+          - nginx
+          - git
+          - curl
+        state: present
+
+    - name: Update cache va upgrade (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Xac nhan cac lenh da co mat (nginx dung -v)
+      ansible.builtin.command: "{{ item.cmd }} {{ item.flag }}"
+      register: ver
+      changed_when: false
+      loop:
+        - { cmd: git, flag: "--version" }
+        - { cmd: curl, flag: "--version" }
+        - { cmd: nginx, flag: "-v" }
+
+    - name: In phien ban thu thap duoc
+      ansible.builtin.debug:
+        msg: "{{ item.stdout | default(item.stderr) | trim }}"
+      loop: "{{ ver.results }}"
+      loop_control:
+        label: "{{ item.item.cmd }}"

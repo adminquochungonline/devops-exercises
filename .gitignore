@@ -94,3 +94,6 @@ venv.bak/
 
 #Jetbrain's ides.
 .idea
+
+# Ansible lab - inventory chua secret (khong day len Git)
+ansible-k3s/playbooks/inventory-remote.ini
