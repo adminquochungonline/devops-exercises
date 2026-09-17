@@ -1,0 +1,37 @@
+---
+# Scenario 8: Quan ly secret voi Ansible Vault
+# Nguon: topics/ansible/ansible_scenarios_thuc_te.md (muc 8)
+#
+# - Bien bi mat (db_password) nam trong file da MA HOA: group_vars/webservers/vault.yml
+# - Playbook dung bien do de sinh file config /etc/myapp/db.conf tren target-node
+# - Secret KHONG xuat hien duoi dang plaintext trong playbook nay
+- name: Deploy DB config tu secret trong Ansible Vault
+  hosts: webservers
+  become: yes
+  vars:
+    app_dir: /etc/myapp
+  tasks:
+    - name: Tao thu muc ung dung
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Sinh file config tu template (co su dung secret tu vault)
+      ansible.builtin.copy:
+        dest: "{{ app_dir }}/db.conf"
+        mode: '0600'
+        content: |
+          # File nay do Ansible quan ly
+          db_host={{ db_host }}
+          db_user={{ db_user }}
+          db_password={{ vault_db_password }}
+
+    - name: Doc lai file config de xac nhan (khong in password ra man hinh)
+      ansible.builtin.command: "grep -c db_password {{ app_dir }}/db.conf"
+      register: check
+      changed_when: false
+
+    - name: Bao cao ket qua
+      ansible.builtin.debug:
+        msg: "Da tao {{ app_dir }}/db.conf, so dong chua db_password: {{ check.stdout }}"

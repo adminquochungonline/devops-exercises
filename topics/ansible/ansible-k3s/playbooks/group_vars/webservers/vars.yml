@@ -1,0 +1,3 @@
+# Bien thuong (khong bi mat) cho group webservers
+db_host: db.internal.local
+db_user: appuser
